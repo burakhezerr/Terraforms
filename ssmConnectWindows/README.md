@@ -19,7 +19,11 @@ mkdir aws-windows-ssm
 cd aws-windows-ssm
 ```
 
-## Step 2: Initialize Terraform
+## Step 2: Clone this repository into your local machine 
+git clone https://github.com/burakhezerr/Terraforms.git
+# But this command clones all folders in this repository, you can remove all other things 
+
+## Step 3: Initialize Terraform
 
 Initialize Terraform in your project directory to download the required providers and modules:
 
@@ -27,7 +31,7 @@ Initialize Terraform in your project directory to download the required provider
 terraform init
 ```
 
-## Step 3: Apply Terraform Configuration
+## Step 4: Apply Terraform Configuration
 
 Apply the Terraform configuration to create the AWS resources:
 
@@ -37,7 +41,7 @@ terraform apply
 
 Review the plan and type `yes` to confirm and create the resources.
 
-## Step 4: Install SSM Session Manager Plugin
+## Step 5: Install SSM Session Manager Plugin
 
 ### For Windows:
 
@@ -67,7 +71,7 @@ Verify the installation:
 session-manager-plugin --version
 ```
 
-## Step 5: Connect to Your Windows Instance via SSM
+## Step 6: Connect to Your Windows Instance via SSM
 
 Use AWS CLI to start a port forwarding session to your Windows instance for RDP access:
 
