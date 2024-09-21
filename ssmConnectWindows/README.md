@@ -25,7 +25,7 @@ cd aws-windows-ssm
 git clone https://github.com/burakhezerr/Terraforms.git
 ```
 
-# But this command clones all folders in this repository, you can remove all other things 
+## But this command clones all folders in this repository, you can remove all other things 
 
 ## Step 3: Initialize Terraform
 
