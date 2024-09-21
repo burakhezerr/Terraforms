@@ -19,8 +19,12 @@ mkdir aws-windows-ssm
 cd aws-windows-ssm
 ```
 
-## Step 2: Clone this repository into your local machine 
+## Step 2: Clone this repository into your local machine
+
+```bash
 git clone https://github.com/burakhezerr/Terraforms.git
+```
+
 # But this command clones all folders in this repository, you can remove all other things 
 
 ## Step 3: Initialize Terraform
