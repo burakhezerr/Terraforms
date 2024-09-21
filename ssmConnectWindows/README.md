@@ -1,4 +1,3 @@
-
 # AWS Windows Instance Setup and SSM Connection Guide
 
 This guide provides instructions on how to set up a Windows instance on AWS using Terraform and connect to it via AWS Systems Manager (SSM). It also includes steps for installing the SSM Session Manager Plugin on your local machine.
@@ -9,6 +8,19 @@ This guide provides instructions on how to set up a Windows instance on AWS usin
 - **AWS CLI**: [AWS CLI Installation Guide](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
 - **SSM Session Manager Plugin**: [Session Manager Plugin Installation Guide](https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager-working-with-install-plugin.html)
 - AWS account with necessary permissions
+- **Important!** Edit the `variables.tf` file in the root path according to your specific configuration.
+- **You must be sure** awscli is installed in your local machine, you can check with this:
+
+```bash
+aws --version
+```
+
+- **Also,** your aws credentials must be configured in your local machine:
+
+```bash
+aws configure
+```
+You can use this command to configure your AWS account with local machine
 
 ## Step 1: Set Up the Project Directory
 
@@ -24,8 +36,7 @@ cd aws-windows-ssm
 ```bash
 git clone https://github.com/burakhezerr/Terraforms.git
 ```
-
-### But this command clones all folders in this repository, you can remove all other things 
+But this command clones all folders in this repository, you can remove all other things 
 
 ## Step 3: Initialize Terraform
 
@@ -86,7 +97,7 @@ aws ssm start-session     --target <instance-id>     --document-name AWS-StartPo
 - Replace `<instance-id>` with your actual instance ID.
 - This command forwards the RDP port (3389) on your instance to port 3390 on your local machine.
 
-## Step 6: Access the Instance via RDP
+## Step 7: Access the Instance via RDP
 
 Open your RDP client and connect to `localhost:3390` using the Administrator username and password you set.
 
