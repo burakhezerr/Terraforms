@@ -96,6 +96,7 @@ resource "aws_security_group" "windows_sg" {
     vpc_id      = aws_vpc.vpc.id
 
     ingress {
+        description = "Allow RDP traffic from anywhere"
         from_port   = 3389
         to_port     = 3389
         protocol    = "tcp"
@@ -103,12 +104,14 @@ resource "aws_security_group" "windows_sg" {
     }
 
     ingress {
+        description = "Allow HTTPS traffic from anywhere"
         from_port   = 443
         to_port     = 443
         protocol    = "tcp"
         cidr_blocks = ["0.0.0.0/0"] # It allows HTTPS traffic for Windows instances SSM
     }
     egress {
+        description = "Allow all traffic out"
         from_port   = 0
         to_port     = 0
         protocol    = "-1"
@@ -118,3 +121,4 @@ resource "aws_security_group" "windows_sg" {
         Name = "${var.project_name}-windows-sg"
     }
 }
+

@@ -1,7 +1,11 @@
-variable "project_name" {}
-
-variable "windows_sg" {}
+variable "iam_ssm_instance_profile" {}
 
 variable "private_subnets" {}
 
-variable "iam_ssm_instance_profile" {}
+variable "project_name" {}
+
+variable "windowsAMI" {}
+
+variable "windows_instance_type" {}
+
+variable "windows_sg" {}

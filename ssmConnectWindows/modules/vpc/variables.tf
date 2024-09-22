@@ -11,3 +11,5 @@ variable "public_subnet_cidrs" {}
 variable "private_subnet_cidrs" {}
 
 variable "subnet_count" {}
+
+variable "vpc_endpoint_type" {}

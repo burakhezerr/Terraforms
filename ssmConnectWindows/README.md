@@ -38,7 +38,16 @@ git clone https://github.com/burakhezerr/Terraforms.git
 ```
 But this command clones all folders in this repository, you can remove all other things 
 
-## Step 3: Initialize Terraform
+## Step 3: Just look at the terraform code:
+Especially `variables.tfvars`. It includes the project details:
+- Which region is used?
+- How many azs available?
+- The CIDR ranges
+- Windows EC2 machine instance AMI and type.
+
+Just change these variables for whatever your plan to use in AWS
+
+## Step 4: Initialize Terraform
 
 Initialize Terraform in your project directory to download the required providers and modules:
 
@@ -46,17 +55,26 @@ Initialize Terraform in your project directory to download the required provider
 terraform init
 ```
 
-## Step 4: Apply Terraform Configuration
+## Step 5: Plan Terraform Configuration
+Just run this command to see what terraform creates:
+
+```bash
+terraform plan -var-file="variables.tfvars"
+```
+
+Use -var-file parameter to use varibles that is stored in `variables.tfvars`.
+
+## Step 6: Apply Terraform Configuration
 
 Apply the Terraform configuration to create the AWS resources:
 
 ```bash
-terraform apply
+terraform apply -var-file="variables.tfvars"
 ```
 
 Review the plan and type `yes` to confirm and create the resources.
 
-## Step 5: Install SSM Session Manager Plugin
+## Step 7: Install SSM Session Manager Plugin
 
 ### For Windows:
 
@@ -86,7 +104,7 @@ Verify the installation:
 session-manager-plugin --version
 ```
 
-## Step 6: Connect to Your Windows Instance via SSM
+## Step 8: Connect to Your Windows Instance via SSM
 
 Use AWS CLI to start a port forwarding session to your Windows instance for RDP access:
 
@@ -97,7 +115,7 @@ aws ssm start-session     --target <instance-id>     --document-name AWS-StartPo
 - Replace `<instance-id>` with your actual instance ID.
 - This command forwards the RDP port (3389) on your instance to port 3390 on your local machine.
 
-## Step 7: Access the Instance via RDP
+## Step 9: Access the Instance via RDP
 
 Open your RDP client and connect to `localhost:3390` using the Administrator username and password you set.
 
@@ -122,7 +140,7 @@ If you encounter issues connecting to your instance:
 To remove all resources created by Terraform:
 
 ```bash
-terraform destroy
+terraform destroy -var-file="variables.tfvars"
 ```
 
 Confirm the plan by typing `yes`.
