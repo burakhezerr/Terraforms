@@ -45,6 +45,8 @@ Especially `variables.tfvars`. It includes the project details:
 - The CIDR ranges
 - Windows EC2 machine instance AMI and type.
 
+**Be careful also** `./modules/ec2/main.tf`. Because the fifth line, **keypair has been commanded**. So add the new keypair in your AWS account on the AWS Management Console, **put a name, and change this line according to the name of keypair.**
+
 Just change these variables for whatever your plan to use in AWS
 
 ## Step 4: Initialize Terraform

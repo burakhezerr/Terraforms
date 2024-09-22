@@ -1,4 +1,3 @@
-# EC2 instance'a IAM role'u atama
 resource "aws_instance" "windows_instance" {
     ami                                  = var.windowsAMI
     associate_public_ip_address          = false
