@@ -8,4 +8,4 @@ variable "windowsAMI" {}
 
 variable "windows_instance_type" {}
 
-variable "windows_sg" {}
+variable "windows_sg_id" {}

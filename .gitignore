@@ -1,0 +1,7 @@
+.DS_Store
+
+./ssmConnectWindows/.DS_Store
+
+./ssmConnectWindows/.terraform/*
+./ssmConnectWindows/.terraform
+./ssmConnectWindows/.terraform.lock.hcl
