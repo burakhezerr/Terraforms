@@ -2,16 +2,20 @@ resource "aws_vpc" "vpc" {
     cidr_block           = var.vpc_cidr_block
     enable_dns_hostnames = true
     enable_dns_support   = true
-    tags = merge(
-        { Name = "${var.project_name}-vpc" }
-    )
+
+    tags = {
+        Name      = "${var.project_name}-vpc"
+        ManagedBy = "terraform"
+    }
 }
 
 resource "aws_internet_gateway" "igw" {
     vpc_id = aws_vpc.vpc.id
-    tags = merge(
-        { Name = "${var.project_name}-igw" }
-    )
+
+    tags = {
+        Name      = "${var.project_name}-igw"
+        ManagedBy = "terraform"
+    }
 }
 
 resource "aws_subnet" "public_subnets" {
@@ -19,8 +23,10 @@ resource "aws_subnet" "public_subnets" {
     availability_zone = each.key
     cidr_block        = cidrsubnet(var.vpc_cidr_block, 8, 2 * each.value)
     vpc_id            = aws_vpc.vpc.id
+
     tags = {
-        Name = "${var.project_name}-public-subnet-${each.value + 1}"
+        Name      = "${var.project_name}-public-subnet-${each.value + 1}"
+        ManagedBy = "terraform"
     }
 }
 
@@ -29,51 +35,61 @@ resource "aws_subnet" "private_subnets" {
     availability_zone = each.key
     cidr_block        = cidrsubnet(var.vpc_cidr_block, 8, 2 * each.value + 1)
     vpc_id            = aws_vpc.vpc.id
+
     tags = {
-        Name = "${var.project_name}-private-subnet-${each.value + 1}"
+        Name      = "${var.project_name}-private-subnet-${each.value + 1}"
+        ManagedBy = "terraform"
     }
 }
 
-# These elastic IPs is for NAT Gateways
 resource "aws_eip" "eips" {
     for_each   = { for idx, az in var.azs : az => idx if idx < var.subnet_count }
-    depends_on = [
-        aws_internet_gateway.igw
-    ]
-    tags = merge(
-        { Name = "${var.project_name}-eIP-${each.value + 1}" }
-    )
+    depends_on = [aws_internet_gateway.igw]
+
+    tags = {
+        Name      = "${var.project_name}-eip-${each.value + 1}"
+        ManagedBy = "terraform"
+    }
 }
+
 resource "aws_nat_gateway" "nat_gateways" {
     for_each      = { for idx, az in var.azs : az => idx if idx < var.subnet_count }
     allocation_id = aws_eip.eips[each.key].id
     subnet_id     = aws_subnet.public_subnets[each.key].id
-    tags = merge(
-        { Name = "${var.project_name}-NAT-gateway-${each.key}" }
-    )
+
+    tags = {
+        Name      = "${var.project_name}-nat-gateway-${each.key}"
+        ManagedBy = "terraform"
+    }
 }
 
 resource "aws_route_table" "public_route_table" {
     vpc_id = aws_vpc.vpc.id
+
     route {
         cidr_block = "0.0.0.0/0"
         gateway_id = aws_internet_gateway.igw.id
     }
-    tags = merge(
-        { Name = "${var.project_name}-public-route-table" }
-    )
+
+    tags = {
+        Name      = "${var.project_name}-public-route-table"
+        ManagedBy = "terraform"
+    }
 }
 
 resource "aws_route_table" "private_route_tables" {
     for_each = { for idx, az in var.azs : az => idx if idx < var.subnet_count }
     vpc_id   = aws_vpc.vpc.id
+
     route {
         cidr_block     = "0.0.0.0/0"
         nat_gateway_id = aws_nat_gateway.nat_gateways[each.key].id
     }
-    tags = merge(
-        { Name = "${var.project_name}-private-route-table-${each.key}" }
-    )
+
+    tags = {
+        Name      = "${var.project_name}-private-route-table-${each.key}"
+        ManagedBy = "terraform"
+    }
 }
 
 resource "aws_route_table_association" "public_table_association" {
@@ -87,39 +103,38 @@ resource "aws_route_table_association" "private_table_association" {
     route_table_id = aws_route_table.private_route_tables[each.key].id
     subnet_id      = aws_subnet.private_subnets[each.key].id
 }
-#####################################
-########## Security group  ##########
-#####################################
 
 resource "aws_security_group" "windows_sg" {
-    description = "${var.project_name} windows sg"
+    description = "Security group for Windows SSM instances"
     name        = "${var.project_name}-windows-sg"
     vpc_id      = aws_vpc.vpc.id
 
     ingress {
-        description = "Allow RDP traffic from anywhere"
+        description = "RDP access"
         from_port   = 3389
         to_port     = 3389
         protocol    = "tcp"
-        cidr_blocks = [var.all_cidr_block] # We can restrict this to a specific IP range
+        cidr_blocks = [var.all_cidr_block]
     }
 
     ingress {
-        description = "Allow HTTPS traffic from anywhere"
+        description = "HTTPS for SSM Session Manager"
         from_port   = 443
         to_port     = 443
         protocol    = "tcp"
-        cidr_blocks = [var.all_cidr_block] # It allows HTTPS traffic for Windows instances SSM
+        cidr_blocks = [var.all_cidr_block]
     }
+
     egress {
-        description = "Allow all traffic out"
+        description = "Allow all outbound traffic"
         from_port   = 0
         to_port     = 0
         protocol    = "-1"
         cidr_blocks = [var.all_cidr_block]
     }
+
     tags = {
-        Name = "${var.project_name}-windows-sg"
+        Name      = "${var.project_name}-windows-sg"
+        ManagedBy = "terraform"
     }
 }
-

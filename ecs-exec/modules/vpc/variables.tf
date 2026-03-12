@@ -1,15 +1,30 @@
-variable "project_name" {}
+variable "project_name" {
+  description = "Name of the project, used for resource naming"
+  type        = string
+}
 
-variable "region" {}
+variable "region" {
+  description = "AWS region"
+  type        = string
+}
 
-variable "azs" {}
+variable "azs" {
+  description = "List of availability zone names"
+  type        = list(string)
+}
 
-variable "subnet_count" {}
+variable "subnet_count" {
+  description = "Number of subnets to create"
+  type        = number
+}
 
-variable "vpc_cidr_block" {}
+variable "vpc_cidr_block" {
+  description = "CIDR block for the VPC"
+  type        = string
+}
 
 variable "all_cidr_block" {
-    type = string
-    description = "All traffic CIDR Block"
-    default = "0.0.0.0/0"
+  description = "CIDR block for all traffic (used in security group rules)"
+  type        = string
+  default     = "0.0.0.0/0"
 }

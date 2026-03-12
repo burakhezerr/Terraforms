@@ -1,4 +1,3 @@
-# IAM Role for SSM access to EC2 instances (Windows)
 resource "aws_iam_role" "ssm_role" {
     name = "${var.project_name}-ssm-role"
 
@@ -12,16 +11,19 @@ resource "aws_iam_role" "ssm_role" {
             }
         }]
     })
+
+    tags = {
+        Name      = "${var.project_name}-ssm-role"
+        ManagedBy = "terraform"
+    }
 }
 
-# IAM Policy for SSM access to EC2 instances (Windows)
 resource "aws_iam_policy_attachment" "ssm_policy_attach" {
     name       = "${var.project_name}-ssm-policy-attach"
-    roles      = [aws_iam_role.ssm_role .name]
+    roles      = [aws_iam_role.ssm_role.name]
     policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
 
-# IAM Instance Profile for SSM access to EC2 instances (Windows)
 resource "aws_iam_instance_profile" "ssm_instance_profile" {
     name = "${var.project_name}-ssm-instance-profile"
     role = aws_iam_role.ssm_role.name
